@@ -1,0 +1,13 @@
+---
+ami_by_region:
+  us-east-2: ami-0f6c1051253397fef
+  us-east-1: ami-0c15e602d3d6c6c4a
+  us-west-1: ami-0e40cbc388241f8ce
+  us-west-2: ami-0f72881cd8392994c
+
+flavors:
+  tiny: t2.micro
+  small: t2.small
+  medium: t2.medium
+  large: t2.large
+  xlarge: t2.xlarge
