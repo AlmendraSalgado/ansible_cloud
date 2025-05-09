@@ -24,7 +24,8 @@
 
     - name: Save for later information from ec2_instance
       ansible.builtin.set_stats:
-        instance_name: "{{ instance_name }}"
-        instance_id: "{{ ec2_instance.instance_ids[0] }}"
-        ami_id: "{{ ami_by_region[aws_region] }}"
-        public_ip: "{{ ec2_instance.instances[0].public_ip_address }}"
+        data:
+          instance_name: "{{ instance_name }}"
+          instance_id: "{{ ec2_instance.instance_ids[0] }}"
+          ami_id: "{{ ami_by_region[aws_region] }}"
+          public_ip: "{{ ec2_instance.instances[0].public_ip_address }}"
