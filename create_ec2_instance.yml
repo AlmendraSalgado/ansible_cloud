@@ -11,7 +11,7 @@
         region: "{{ aws_region }}"
         key_name: "{{ key_name }}"
         instance_type: "{{ instance_type }}"
-        image_id: "{{ ami_id }}"
+        image_id: "{{ ami_by_region[aws_region] }}"
         count: 1
         wait: true
         tags:
