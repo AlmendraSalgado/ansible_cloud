@@ -39,10 +39,10 @@
         security_group: "{{ security_group_name }}"
         user_data: |
           <powershell>
+          net user Administrator "redhat123"
           # Download and execute a PowerShell script from GitHub
           Invoke-WebRequest -Uri "https://raw.githubusercontent.com/AlmendraSalgado/ansible_windows/refs/heads/main/ConfigureRemotingForAnsible.ps1" -OutFile "C:\Users\Administrator\script.ps1"
           Start-Process -FilePath "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -File C:\Users\Administrator\script.ps1"
-          net user Administrator "redhat123"
           </powershell>
         tags:
           Name: "{{ instance_name }}"
