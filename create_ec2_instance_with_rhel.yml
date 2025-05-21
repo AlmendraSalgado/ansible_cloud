@@ -40,5 +40,5 @@
         data:
           instance_name: "{{ instance_name }}"
           instance_id: "{{ ec2_instance.instance_ids[0] }}"
-          ami_id: "{{ ami_by_region[aws_region] }}"
+          ami_id: "{{ rhel_ami_by_region[aws_region] }}"
           public_ip: "{{ ec2_instance.instances[0].public_ip_address }}"
