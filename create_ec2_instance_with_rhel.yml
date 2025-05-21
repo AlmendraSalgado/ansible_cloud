@@ -6,14 +6,31 @@
     - vars/aws_flavors.yml
 
   tasks:
+    - name: Create security group for SSH access
+      amazon.aws.ec2_security_group:
+        name: "ssh-only-sg"
+        description: "Security group for SSH access only"
+        region: "{{ aws_region }}"
+      register: security_group
+
+    - name: Add inbound rule for SSH (port 22)
+      amazon.aws.ec2_security_group_rule:
+        group_id: "{{ security_group.group_id }}"
+        ip_protocol: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: "0.0.0.0/0"  # Allow access from any IP (adjust for better security)
+        region: "{{ aws_region }}"
+
     - name: Create VM in AWS
       amazon.aws.ec2_instance:
         region: "{{ aws_region }}"
         key_name: "{{ key_name }}"
         instance_type: "{{ instance_type }}"
-        image_id: "{{ ami_by_region[aws_region] }}"
+        image_id: "{{ rhel_ami_by_region[aws_region] }}"
         count: 1
         wait: true
+        security_group: "ssh-only-sg"
         tags:
           Name: "{{ instance_name }}"
       register: ec2_instance

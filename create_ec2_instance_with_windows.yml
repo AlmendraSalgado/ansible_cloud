@@ -1,0 +1,60 @@
+- name: Create a VM in AWS EC2 with Windows Server
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    security_group_name: windows-sg
+
+  tasks:
+    - name: Create security group for Windows instance
+      amazon.aws.ec2_security_group:
+        name: "{{ security_group_name }}"
+        description: "Security group for Windows instance with WinRM and RDP access"
+        region: "{{ aws_region }}"
+      register: security_group
+
+    - name: Add inbound rule for WinRM-HTTPS (port 5986)
+      amazon.aws.ec2_security_group_rule:
+        group_id: "{{ security_group.group_id }}"
+        ip_protocol: tcp
+        from_port: 5986
+        to_port: 5986
+        cidr_ip: "0.0.0.0/0"
+        region: "{{ aws_region }}"
+
+    - name: Add inbound rule for WinRM-HTTP (port 5985)
+      amazon.aws.ec2_security_group_rule:
+        group_id: "{{ security_group.group_id }}"
+        ip_protocol: tcp
+        from_port: 5985
+        to_port: 5985
+        cidr_ip: "0.0.0.0/0"
+        region: "{{ aws_region }}"
+
+    - name: Add inbound rule for RDP (port 3389)
+      amazon.aws.ec2_security_group_rule:
+        group_id: "{{ security_group.group_id }}"
+        ip_protocol: tcp
+        from_port: 3389
+        to_port: 3389
+        cidr_ip: "0.0.0.0/0"
+        region: "{{ aws_region }}"
+
+    - name: Create Windows EC2 instance
+      amazon.aws.ec2_instance:
+        region: "{{ aws_region }}"
+        key_name: "{{ key_name }}"
+        instance_type: "{{ instance_type }}"
+        image_id: "{{ windows_ami_by_region[aws_region] }}"  # Windows AMI ID
+        count: 1
+        wait: true
+        security_group: "{{ security_group_name }}"
+        user_data: |
+          <powershell>
+          # Download and execute a PowerShell script from GitHub
+          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/AlmendraSalgado/ansible_windows/refs/heads/main/ConfigureRemotingForAnsible.ps1" -OutFile "C:\Temp\script.ps1"
+          Start-Process -FilePath "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -File C:\Temp\script.ps1"
+          </powershell>
+        tags:
+          Name: "{{ instance_name }}"
+      register: ec2_instance
