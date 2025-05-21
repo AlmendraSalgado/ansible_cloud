@@ -11,34 +11,20 @@
         name: "{{ security_group_name }}"
         description: "Security group for Windows instance with WinRM and RDP access"
         region: "{{ aws_region }}"
+        rules:
+        - proto: tcp
+          from_port: 5986
+          to_port: 80
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 5985
+          to_port: 3389
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 3389
+          to_port: 3389
+          cidr_ip: 0.0.0.0/0
       register: security_group
-
-    - name: Add inbound rule for WinRM-HTTPS (port 5986)
-      amazon.aws.ec2_security_group_rule:
-        group_id: "{{ security_group.group_id }}"
-        ip_protocol: tcp
-        from_port: 5986
-        to_port: 5986
-        cidr_ip: "0.0.0.0/0"
-        region: "{{ aws_region }}"
-
-    - name: Add inbound rule for WinRM-HTTP (port 5985)
-      amazon.aws.ec2_security_group_rule:
-        group_id: "{{ security_group.group_id }}"
-        ip_protocol: tcp
-        from_port: 5985
-        to_port: 5985
-        cidr_ip: "0.0.0.0/0"
-        region: "{{ aws_region }}"
-
-    - name: Add inbound rule for RDP (port 3389)
-      amazon.aws.ec2_security_group_rule:
-        group_id: "{{ security_group.group_id }}"
-        ip_protocol: tcp
-        from_port: 3389
-        to_port: 3389
-        cidr_ip: "0.0.0.0/0"
-        region: "{{ aws_region }}"
 
     - name: Create Windows EC2 instance
       amazon.aws.ec2_instance:
