@@ -47,13 +47,8 @@
         security_group: "{{ security_group_name }}"
         user_data: |
           <powershell>
-          net user Administrator redhat123
-          $scriptPath = "C:\Users\Administrator\script.ps1"
           # Download and execute a PowerShell script from GitHub
-          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/AlmendraSalgado/ansible_windows/refs/heads/main/ConfigureRemotingForAnsible.ps1" -OutFile $scriptPath
-          $action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-ExecutionPolicy Bypass -File `"$scriptPath`""
-          $trigger = New-ScheduledTaskTrigger -AtStartup
-          Register-ScheduledTask -Action $action -Trigger $trigger -TaskName $taskName -RunLevel Highest -User "SYSTEM"
+          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/AlmendraSalgado/ansible_windows/refs/heads/main/ConfigureRemotingForAnsible.ps1" -OutFile "C:\Users\Administrator\script.ps1"
           </powershell>
         tags:
           Name: "{{ instance_name }}"

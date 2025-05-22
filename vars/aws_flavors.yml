@@ -6,4 +6,4 @@ rhel_ami_by_region:
   us-west-2: ami-0f72881cd8392994c
 
 windows_ami_by_region:
-  us-east-2: ami-070f90bab72874c6f
+  us-east-2: ami-029f511ca787e1764
