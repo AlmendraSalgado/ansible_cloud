@@ -10,6 +10,7 @@
       amazon.aws.ec2_security_group:
         name: ssh-only-sg
         description: allow SSH access 
+        vpc_id: "{{ vpc_id }}"
         region: "{{ aws_region }}"
         rules:
           - proto: tcp
