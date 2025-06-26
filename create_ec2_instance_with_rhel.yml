@@ -10,7 +10,7 @@
       amazon.aws.ec2_security_group:
         name: ssh-only-sg
         description: allow SSH access 
-        vpc_id: "{{ vpc_id }}"
+        vpc_id: "{{ vpc_id | default(omit) }}"
         region: "{{ aws_region }}"
         rules:
           - proto: tcp
@@ -33,6 +33,7 @@
         key_name: "{{ key_name }}"
         instance_type: "{{ instance_type }}"
         image_id: "{{ rhel_ami_by_region[aws_region] }}"
+        vpc_subnet_id: "{{ vpc_subnet_id | default(omit) }}"
         count: 1
         wait: true
         security_group: "ssh-only-sg"
