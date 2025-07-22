@@ -1,0 +1,35 @@
+---
+- hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Delete an Instance 
+      google.cloud.gcp_compute_instance:
+        project: "{{ gcp_project }}"
+        state: absent
+        name: "{{ gcp_instance_name }}"
+        zone: "{{ gcp_zone }}"
+
+    - name: Delete the disk
+      google.cloud.gcp_compute_disk:
+        name: "{{ gcp_disk_name }}"
+        zone: "{{ gcp_zone }}"
+        project: "{{ gcp_project }}"
+        state: absent
+      register: disk
+
+    - name: Delete a network
+      google.cloud.gcp_compute_network:
+        name: "{{ gcp_network_name }}"
+        project: "{{ gcp_project }}"
+        state: absent
+      register: network
+
+    - name: Release the static IP address
+      google.cloud.gcp_compute_address:
+        name: "{{ gcp_address_name }}"
+        region: "{{ gcp_region  }}"
+        project: "{{ gcp_project }}"
+        state: absent
+      register: address
+
