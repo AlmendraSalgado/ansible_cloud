@@ -1,0 +1,57 @@
+---
+- hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Create a disk with the latest RHEL version
+      google.cloud.gcp_compute_disk:
+        name: "{{ gcp_disk_name | default('test_ansible_disk') }}"
+        size_gb: "{{ gcp_disk_size_gb | default(50) }}"
+        source_image: "{{ gcp_source_image }}"
+        zone: "{{ gcp_zone }}"
+        project: "{{ gcp_project }}"
+        # auth_kind: "{{ gcp_cred_kind }}"
+        # service_account_file: "{{ gcp_cred_file }}"
+        state: present
+      register: disk
+
+    - name: Create a network
+      google.cloud.gcp_compute_network:
+        name: "{{ gcp_network_name | default('test_default_network')}}"
+        project: "{{ gcp_project }}"
+        auto_create_subnetworks: true
+        # auth_kind: "{{ gcp_cred_kind }}"
+        # service_account_file: "{{ gcp_cred_file }}"
+        state: present
+      register: network
+
+    - name: Create an address
+      google.cloud.gcp_compute_address:
+        name: "{{ gcp_address_name | default('test_ansible_address') }}"
+        region: "{{ gcp_region  }}"
+        project: "{{ gcp_project }}"
+        network: "{{ network }}"
+        # auth_kind: "{{ gcp_cred_kind }}"
+        # service_account_file: "{{ gcp_cred_file }}"
+        state: present
+      register: address
+
+    - name: Create an Instance 
+      google.cloud.gcp_compute_instance:
+        # auth_kind: serviceaccount
+        project: "{{ gcp_project }}"
+        # service_account_file: "{{ service_account_file }}"
+        state: present
+        name: "{{ gcp_instance_name | default('test_ansible_instance') }}"
+        machine_type: "{{ gcp_instance_type | default('n1-standard-1') }}"
+        zone: "{{ gcp_zone }}"
+        disks:
+          - auto_delete: true
+            boot: true
+            source: "{{ disk }}"
+        network_interfaces:
+          - network: "{{ network }}"
+            access_configs:
+              - name: External NAT
+                type: ONE_TO_ONE_NAT
+                nat_ip: "{{ address }}"
