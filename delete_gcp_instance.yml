@@ -18,6 +18,13 @@
         state: absent
       register: disk
 
+    - name: Allow SSH (port 22) from anywhere
+      google.cloud.gcp_compute_firewall:
+        name: allow-ssh
+        network: "{{ network }}"
+        project: "{{ gcp_project }}"
+        state: absent
+
     - name: Delete a network
       google.cloud.gcp_compute_network:
         name: "{{ gcp_network_name }}"
