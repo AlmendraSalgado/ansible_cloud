@@ -70,7 +70,7 @@
             boot: true
             source: "{{ disk }}"
         tags:
-          - "{{ gcp_firewall_name }}"
+          items: "{{ gcp_firewall_name }}"
         network_interfaces:
           - network: "{{ network }}"
             access_configs:
