@@ -21,7 +21,6 @@
     - name: Allow SSH (port 22) from anywhere
       google.cloud.gcp_compute_firewall:
         name: allow-ssh
-        network: "{{ network }}"
         project: "{{ gcp_project }}"
         state: absent
 
