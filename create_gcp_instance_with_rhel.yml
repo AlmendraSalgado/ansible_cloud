@@ -64,7 +64,7 @@
         machine_type: "{{ gcp_instance_type | default('n1-standard-1') }}"
         zone: "{{ gcp_zone }}"
         metadata:
-          ssh-keys: "root:{{ gcp_ssh_pub_key }}"
+          ssh-keys: "asalgado:{{ gcp_ssh_pub_key }}"
         disks:
           - auto_delete: true
             boot: true
