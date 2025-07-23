@@ -24,11 +24,14 @@
         # service_account_file: "{{ gcp_cred_file }}"
         state: present
       register: network
+    
+    - debug:
+        var: network
 
     - name: Allow SSH (port 22) from anywhere
       google.cloud.gcp_compute_firewall:
         name: allow-ssh
-        network: "{{ network.target_link }}"
+        network: "{{ network.resource.selfLink }}"
         project: "{{ gcp_project }}"
         allowed:
           - ip_protocol: tcp
