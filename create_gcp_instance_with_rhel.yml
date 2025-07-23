@@ -25,6 +25,17 @@
         state: present
       register: network
 
+    - name: Allow SSH (port 22) from anywhere
+      google.cloud.gcp_compute_firewall:
+        name: allow-ssh
+        network: "{{ network.target_link }}"
+        project: "{{ gcp_project }}"
+        allowed:
+          - ip_protocol: tcp
+            ports: ['22']
+        source_ranges: ['0.0.0.0/0']
+        state: present
+
     - name: Reserve an static IP address
       google.cloud.gcp_compute_address:
         name: "{{ gcp_address_name | default('test-ansible-address') }}"
