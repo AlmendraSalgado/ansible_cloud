@@ -28,16 +28,21 @@
     - debug:
         var: network
 
-    - name: Allow SSH (port 22) from anywhere
-      google.cloud.gcp_compute_firewall:
-        name: allow-ssh
+    - name: Task to create a firewall
+      gcp_compute_firewall:
+        name: "{{ gcp_firewall_name }}"
         network: "{{ network }}"
-        project: "{{ gcp_project }}"
         allowed:
-          - ip_protocol: tcp
-            ports: ['22']
+        - ip_protocol: tcp
+          ports: ['22']
         source_ranges: ['0.0.0.0/0']
+        target_tags: 
+        - "{{ gcp_firewall_name }}"
+        project: "{{ gcp_project }}"
+        scopes:
+              - https://www.googleapis.com/auth/compute
         state: present
+      register: firewall
 
     - name: Reserve an static IP address
       google.cloud.gcp_compute_address:
