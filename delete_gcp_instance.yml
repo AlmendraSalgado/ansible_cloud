@@ -20,7 +20,7 @@
 
     - name: Allow SSH (port 22) from anywhere
       google.cloud.gcp_compute_firewall:
-        name: allow-ssh
+        name: "{{ gcp_firewall_name }}"
         project: "{{ gcp_project }}"
         state: absent
 
