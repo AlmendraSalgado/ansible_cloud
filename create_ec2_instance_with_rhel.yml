@@ -22,9 +22,9 @@
             to_port: 80
             cidr_ip: 0.0.0.0/0
           - proto: tcp
-            from_port: 443
-            to_port: 443
-            cidr_ip: 0.0.0.0/0
+            from_port: 9090
+            to_port: 9090
+            cidr_ip: 0.0.0.0/0          
       register: security_group
 
     - name: Create VM in AWS
