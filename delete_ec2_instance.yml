@@ -6,6 +6,7 @@
     - name: Delete instance
       amazon.aws.ec2_instance:
         state: absent
+        region: "{{ aws_region | default('us-east-2') }}"
         instance_ids:
           - "{{ instance_id }}"
 
