@@ -8,8 +8,8 @@
   tasks:
     - name: Create security group for SSH access
       amazon.aws.ec2_security_group:
-        name: ssh-only-sg
-        description: allow SSH access 
+        name: "{{ aws_security_group_name | default('test-ansible-sg') }}"
+        description: "{{ aws_security_group_description | default('Allow some ports for accessing the instance') }}"
         vpc_id: "{{ vpc_id | default(omit) }}"
         region: "{{ aws_region | default('us-east-2') }}"
         rules:
@@ -36,7 +36,7 @@
         vpc_subnet_id: "{{ vpc_subnet_id | default(omit) }}"
         count: 1
         wait: true
-        security_group: "ssh-only-sg"
+        security_group: "{{ aws_security_group_name | default('test-ansible-sg') }}"
         tags:
           Name: "{{ instance_name | default('vm1') }}"
       register: ec2_instance

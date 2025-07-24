@@ -1,0 +1,15 @@
+- name: Delete a VM in AWS EC2
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Delete instance
+      amazon.aws.ec2_instance:
+        state: absent
+        instance_ids:
+          - "{{ instance_id }}"
+
+    - name: Delete security group
+      amazon.aws.ec2_security_group:
+        state: absent
+        name: "{{ aws_security_group_name | default('test-ansible-sg') }}"
