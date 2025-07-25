@@ -27,6 +27,13 @@
             cidr_ip: 0.0.0.0/0          
       register: security_group
 
+    - name: Check if EC2 instance already exists
+      amazon.aws.ec2_instance_info:
+        region: "{{ aws_region | default('us-east-2') }}"
+        filters:
+          "tag:Name": "{{ instance_name | default('vm1') }}"
+      register: existing_instance
+
     - name: Create VM in AWS
       amazon.aws.ec2_instance:
         region: "{{ aws_region | default('us-east-2') }}"
@@ -40,6 +47,7 @@
         tags:
           Name: "{{ instance_name | default('vm1') }}"
       register: ec2_instance
+      when: existing_instance.instances | length == 0
 
     - name: Debug instance details
       ansible.builtin.debug:
