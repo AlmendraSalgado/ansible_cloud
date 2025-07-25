@@ -47,7 +47,7 @@
         tags:
           Name: "{{ instance_name | default('vm1') }}"
       register: ec2_instance
-      when: existing_instance.instances | length == 0
+      # when: existing_instance.instances | length == 0
 
     - name: Debug instance details
       ansible.builtin.debug:
