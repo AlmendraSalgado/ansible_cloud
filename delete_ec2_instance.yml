@@ -13,4 +13,5 @@
     - name: Delete security group
       amazon.aws.ec2_security_group:
         state: absent
+        region: "{{ aws_region | default('us-east-2') }}"
         name: "{{ aws_security_group_name | default('test-ansible-sg') }}"
